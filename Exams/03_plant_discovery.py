@@ -1,0 +1,53 @@
+plants_info = {}
+num = int(input())
+
+for _ in range(num):
+    plant_name, rarity = input().split("<->")
+    rarity = int(rarity)
+
+    plants_info[plant_name] = {'rarity': rarity, 'ratings': []}
+
+data = input()
+
+while not data == "Exhibition":
+    command, command_params = data.split(": ")
+    if command == "Rate":
+        plant_name, rating = command_params.split(" - ")
+        rating = int(rating)
+        if plant_name in plants_info:
+            plants_info[plant_name]['ratings'].append(rating)
+        else:
+            print('error')
+
+    elif command == "Update":
+        plant_name, rarity = command_params.split(" - ")
+        rarity = int(rarity)
+        if plant_name in plants_info:
+            plants_info[plant_name]['rarity'] = rarity
+        else:
+            print('error')
+
+    elif command == "Reset":
+        plant_name = command_params
+        if plant_name in plants_info:
+            plants_info[plant_name]['ratings'].clear()
+        else:
+            print('error')
+
+    else:
+        print("error")
+
+    data = input()
+
+for plant_name, value in plants_info.items():
+    if value['ratings']:
+        avg = sum(value['ratings']) / len(value['ratings'])
+    else:
+        avg = 0
+    plants_info[plant_name]['avg'] = avg
+
+print(f"Plants for the exhibition:")
+for plant_name, values in plants_info.items():
+    print(f"- {plant_name}; Rarity: {values['rarity']}; Rating: {values['avg']:.2f}")
+
+    # sorted_plants = sorted(plants_info.items(), key=lambda tkvp: (-tkvp[1]['rarity'], -tkvp[1]['avg'])) # или без -, а reverse=True
